@@ -1,8 +1,8 @@
 package com.example.mazewalk;
 
 
-import com.example.mazewalk.simple.BinaryTree;
 import com.example.mazewalk.simple.Grid;
+import com.example.mazewalk.simple.resolver.SideWinder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
@@ -24,9 +24,13 @@ public class Application extends javafx.application.Application {
         Scene scene = new Scene(pane, SIZE * X, SIZE * Y);
 
         Grid grid = new Grid(X,Y);
-        BinaryTree tree = new BinaryTree();
-        tree.resolve(grid.getGrid());
+        // BinaryTree tree = new BinaryTree();
+        // tree.resolve(grid);
 
+        SideWinder winder = new SideWinder();
+        winder.resolve(grid.getGrid());
+
+        grid.savePng();
         System.out.println(grid.toString());
         System.out.println(grid.toAscii());
 

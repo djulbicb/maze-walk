@@ -1,4 +1,6 @@
-package com.example.mazewalk.simple;
+package com.example.mazewalk.simple.resolver;
+
+import com.example.mazewalk.simple.Cell;
 
 import java.util.ArrayList;
 import java.util.List;

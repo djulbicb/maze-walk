@@ -43,16 +43,16 @@ public class Cell {
 //        return east != null;
 //    }
 
-    public boolean goesNorth() {
+    public boolean isLinkToNorth() {
         return linked.contains(north);
     }
-    public boolean goesSouth() {
+    public boolean isLinkToSouth() {
         return linked.contains(south);
     }
-    public boolean goesWest() {
+    public boolean isLinkToWest() {
         return linked.contains(west);
     }
-    public boolean goesEast() {
+    public boolean isLinkToEast() {
         return linked.contains(east);
     }
 
@@ -129,19 +129,19 @@ public class Cell {
         pane.setLayoutY(size * rowIdx);
         pane.setLayoutX(size * columnIdx);
 
-        if (!goesEast()) {
+        if (!isLinkToEast()) {
             Rectangle wall = new Rectangle(wallThickness, size);
             wall.setLayoutX(size - wallThickness);
             pane.getChildren().add(wall);
         }
-        if (!goesWest()) {
+        if (!isLinkToWest()) {
             pane.getChildren().add(new Rectangle(wallThickness, size));
         }
-        if (!goesNorth()) {
+        if (!isLinkToNorth()) {
             Rectangle wall = new Rectangle(size, wallThickness);
             pane.getChildren().add(wall);
         }
-        if (!goesSouth()) {
+        if (!isLinkToSouth()) {
             Rectangle wall = new Rectangle(size, wallThickness);
             wall.setLayoutY(size - wallThickness);
             pane.getChildren().add(wall);

@@ -1,9 +1,25 @@
 package com.example.mazewalk.simple;
 
+import com.example.mazewalk.Application;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.WritableImage;
+import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.layout.AnchorPane;
 
+import java.awt.geom.Path2D;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.image.BufferedImage;
 
 public class Grid {
     private int rows;
@@ -52,6 +68,71 @@ public class Grid {
     }
 
 
+    public void savePng() {
+        int size = Application.SIZE;
+        int imgWidth = columns * size;
+        int imgHeight = rows * size;
+
+        BufferedImage image = new BufferedImage(imgWidth, imgHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = image.createGraphics();
+
+        // Set background color
+        g2d.setColor(Color.WHITE);
+        g2d.fillRect(0, 0, imgWidth, imgHeight);
+
+        // Set stroke properties
+        g2d.setColor(Color.BLACK);
+        g2d.setStroke(new BasicStroke(5.0f));
+
+        // Create a Path2D object for the polyline
+        Path2D.Double polyline = new Path2D.Double();
+        polyline.moveTo(0, 0); // Move to the first point
+        polyline.lineTo(imgWidth, 0); // Line to the second point
+        polyline.lineTo(imgWidth, imgHeight); // Line to the third point
+        polyline.lineTo(0, imgHeight); // Line to the third point
+        polyline.closePath(); // Close the path (optional)
+        g2d.draw(polyline);
+
+        for (Cell[] row : grid) {
+            for (Cell col : row) {
+                int columnIdx = col.getRowIdx();
+                int rowIdx = col.getColumnIdx();
+
+                int x = rowIdx * size;
+                int y = columnIdx * size;
+                System.out.println(x + " " + y);
+
+                if (!col.isLinkToNorth()) {
+                    polyline.moveTo(x, y);
+                    polyline.lineTo(x + size, y);
+                }
+                if (!col.isLinkToSouth()) {
+                    polyline.moveTo(x, y+size);
+                    polyline.lineTo(x + size, y+size);
+                }
+                if (!col.isLinkToEast()) {
+                    polyline.moveTo(x + size, y);
+                    polyline.lineTo(x + size, y+size);
+                }
+                if (!col.isLinkToWest()) {
+                    polyline.moveTo(x, y);
+                    polyline.lineTo(x, y+size);
+                }
+
+            }
+        }
+        g2d.draw(polyline);
+
+        File outputFile = new File("image.png");
+        try {
+            ImageIO.write(image, "PNG", outputFile);
+            System.out.println("Image saved successfully.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public String toAscii() {
         // Ascii elements
         String body = "  ";
@@ -82,7 +163,7 @@ public class Grid {
         for (int i = 0; i < rows; i++) {
             out.append(side);
             for (int j = 0; j < columns; j++) {
-                if (grid[i][j].goesEast()) {
+                if (grid[i][j].isLinkToEast()) {
                     out.append(empty + body + empty);
                 } else {
                     out.append(empty + body + side);
@@ -96,7 +177,7 @@ public class Grid {
             }
 
             for (int j = 0; j < columns; j++) {
-                if (grid[i][j].goesSouth()) {
+                if (grid[i][j].isLinkToSouth()) {
                     out.append(corner + body + empty);
                 } else {
                     out.append(corner + top);
