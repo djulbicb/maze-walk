@@ -1,4 +1,4 @@
-package com.example.mazewalk;
+package com.example.mazewalk.old;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

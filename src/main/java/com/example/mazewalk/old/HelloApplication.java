@@ -1,8 +1,8 @@
-package com.example.mazewalk;
+package com.example.mazewalk.old;
 
 
-import com.example.mazewalk.elements.Block;
-import com.example.mazewalk.elements.Coordinate;
+import com.example.mazewalk.old.elements.Coordinate;
+import com.example.mazewalk.old.elements.shapes.Hex;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,10 +20,10 @@ public class HelloApplication extends Application {
     static int X = 20;
     static int Y = 10;
 
-    HashMap<String, Block> allRectangles = new HashMap<>();
-    HashMap<String, Block> remainingRectangles = new HashMap<>();
-    HashMap<String, Block> usedRectangles = new HashMap<>();
-    List<Block> path = new ArrayList<>();
+    HashMap<String, Hex> allRectangles = new HashMap<>();
+    HashMap<String, Hex> remainingRectangles = new HashMap<>();
+    HashMap<String, Hex> usedRectangles = new HashMap<>();
+    List<Hex> path = new ArrayList<>();
 
 //    @Override
     public void start(Stage stage) throws IOException {
@@ -36,35 +36,35 @@ public class HelloApplication extends Application {
         scene.setFill(Paint.valueOf("888"));
         for (int gridRowIdx = 0; gridRowIdx < Y; gridRowIdx++) {
             for (int gridColIdx = 0; gridColIdx < X; gridColIdx++) {
-                Block rect = new Block(new Coordinate(gridColIdx, gridRowIdx));
+                Hex rect = new Hex(new Coordinate(gridColIdx, gridRowIdx));
                 allRectangles.put(rect.getKey(), rect);
             }
         }
         remainingRectangles.putAll(allRectangles);
 
-        Block currentBlock = allRectangles.get("0_0");
-        usedRectangles.put(currentBlock.getKey(), currentBlock);
+        Hex currentHex = allRectangles.get("0_0");
+        usedRectangles.put(currentHex.getKey(), currentHex);
         boolean condition = true;
 
         Polyline polyline = new Polyline();
-        addToPolyline(polyline, currentBlock);
+        addToPolyline(polyline, currentHex);
         List<Polyline> polylines = new ArrayList<>();
         polylines.add(polyline);
 
         Color nextColor = nextColor();
         while (condition) {
-            path.add(currentBlock);
-            HashMap<String, Block> availableRect = getAvailableRect(currentBlock, allRectangles);
+            path.add(currentHex);
+            HashMap<String, Hex> availableRect = getAvailableRect(currentHex, allRectangles);
             if (availableRect.size() == 0) {
 
-                Optional<Block> Block1 = pickSomeOtherOne(path);
+                Optional<Hex> Block1 = pickSomeOtherOne(path);
                 if (Block1.isEmpty()) {
                     condition = false;
                     break;
                 } else {
-                    Block nextBlock = Block1.get();
-                    currentBlock.openPort(nextBlock);
-                    currentBlock = nextBlock;
+                    Hex nextHex = Block1.get();
+                    currentHex.openPort(nextHex);
+                    currentHex = nextHex;
 
                     polyline = new Polyline();
                     polylines.add(polyline);
@@ -74,25 +74,25 @@ public class HelloApplication extends Application {
                     System.out.println("FOunt");
 
 
-                    addToPolyline(polyline, currentBlock);
+                    addToPolyline(polyline, currentHex);
 
                 }
             }
 
-            Block nextBlock = getRandom(availableRect);
-            currentBlock.openPort(nextBlock);
-            currentBlock = nextBlock;
+            Hex nextHex = getRandom(availableRect);
+            currentHex.openPort(nextHex);
+            currentHex = nextHex;
 
-            currentBlock.setColor(nextColor.toString());
-            path.add(currentBlock);
-            addToPolyline(polyline, currentBlock);
-            usedRectangles.put(currentBlock.getKey(), currentBlock);
+            currentHex.setColor(nextColor.toString());
+            path.add(currentHex);
+            addToPolyline(polyline, currentHex);
+            usedRectangles.put(currentHex.getKey(), currentHex);
 
-            remainingRectangles.remove(currentBlock.getKey());
+            remainingRectangles.remove(currentHex.getKey());
         }
 
         boolean skip = true;
-        for (Block value : allRectangles.values()) {
+        for (Hex value : allRectangles.values()) {
 //            if (skip) {
 //                skip = false;
 //                continue;
@@ -107,8 +107,8 @@ public class HelloApplication extends Application {
         stage.show();
     }
 
-    private void addToPolyline(Polyline polyline, Block Block) {
-        polyline.getPoints().addAll(Block.getMiddle().getKey(), Block.getMiddle().getValue());
+    private void addToPolyline(Polyline polyline, Hex Hex) {
+        polyline.getPoints().addAll(Hex.getMiddle().getKey(), Hex.getMiddle().getValue());
     }
 
     Random r = new Random();
@@ -124,29 +124,29 @@ public class HelloApplication extends Application {
         return rangeMin + (rangeMax - rangeMin) * r.nextDouble();
     }
 
-    private Optional<Block> pickSomeOtherOne(List<Block> path) {
-        for (Block Block : path) {
-            HashMap<String, Block> availableRect = getAvailableRect(Block, remainingRectangles);
+    private Optional<Hex> pickSomeOtherOne(List<Hex> path) {
+        for (Hex Hex : path) {
+            HashMap<String, Hex> availableRect = getAvailableRect(Hex, remainingRectangles);
             if (availableRect.size() > 0) {
-                return Optional.of(Block);
+                return Optional.of(Hex);
             }
         }
         return Optional.empty();
     }
 
-    private Block getRandom(HashMap<String, Block> availableRect) {
+    private Hex getRandom(HashMap<String, Hex> availableRect) {
         Random generator = new Random();
         Object[] objects = availableRect.values().toArray();
         int i = generator.nextInt(objects.length);
         System.out.println(i);
-        return (Block) objects[i];
+        return (Hex) objects[i];
     }
 
 
-    private HashMap<String, Block> getAvailableRect(Block Block, HashMap<String, Block> allRectangles) {
+    private HashMap<String, Hex> getAvailableRect(Hex Hex, HashMap<String, Hex> allRectangles) {
         List<String> possible = new ArrayList<>();
-        int x = Block.getCoordinate().getX();
-        int y = Block.getCoordinate().getY();
+        int x = (int) Hex.getCoordinate().getX();
+        int y = (int) Hex.getCoordinate().getY();
 
         possible.add(getKey(x + 0, y + -1));
         possible.add(getKey(x + 0, y + 1));
@@ -154,10 +154,10 @@ public class HelloApplication extends Application {
         possible.add(getKey(x + 1, y + 0));
 
 
-        possible.remove(Block.getKey());
+        possible.remove(Hex.getKey());
         possible.removeAll(usedRectangles.keySet());
 
-        HashMap<String, Block> rects = new HashMap<>();
+        HashMap<String, Hex> rects = new HashMap<>();
         for (String s : possible) {
             if (allRectangles.containsKey(s)) {
                 rects.put(s, allRectangles.get(s));

@@ -1,20 +1,23 @@
-package com.example.mazewalk.elements;
+package com.example.mazewalk.old.elements.shapes;
 
-import com.example.mazewalk.HelloApplication;
-import javafx.collections.ObservableList;
+import com.example.mazewalk.Application;
+import com.example.mazewalk.old.elements.Coordinate;
+import com.example.mazewalk.old.elements.Port;
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.scene.shape.Polyline;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.util.Pair;
 
 import java.util.HashSet;
 import java.util.Set;
 
 
-public class Block {
+public class Hex {
     int WALL_THICKNESS = 3;
     private Paint color = new Color(0.5,0.5,0.5,0.5);
 
@@ -24,28 +27,37 @@ public class Block {
         r.setFill(color);
         root.getChildren().add(r);
 
-        if (!ports.contains(Port.UP)) {
-            Rectangle rectangle = new Rectangle(SIZE, WALL_THICKNESS);
-            rectangle.fillProperty().set(Paint.valueOf("444"));
-            root.getChildren().add(rectangle);
-        }
-        if (!ports.contains(Port.DOWN)) {
-            Rectangle rectangle = new Rectangle(SIZE, WALL_THICKNESS);
-            rectangle.setTranslateY(SIZE - WALL_THICKNESS);
-            rectangle.fillProperty().set(Paint.valueOf("444"));
-            root.getChildren().add(rectangle);
-        }
-        if (!ports.contains(Port.LEFT)) {
-            Rectangle rectangle = new Rectangle(WALL_THICKNESS, SIZE);
-            rectangle.fillProperty().set(Paint.valueOf("444"));
-            root.getChildren().add(rectangle);
-        }
-        if (!ports.contains(Port.RIGHT)) {
-            Rectangle rectangle = new Rectangle(WALL_THICKNESS, SIZE);
-            rectangle.fillProperty().set(Paint.valueOf("444"));
-            rectangle.setTranslateX(SIZE - WALL_THICKNESS);
-            root.getChildren().add(rectangle);
-        }
+        double zero = 0;
+        double size = SIZE;
+        double half = SIZE / 2;
+        double third = SIZE / 3.33;
+
+        double hexagonalSide = (2/3.0) * SIZE;
+        double middle = SIZE / 2.0;
+        double magic = Math.sqrt(3.0) / 2;
+
+        Coordinate v1 = new Coordinate(middle - hexagonalSide, middle);
+        Coordinate v2 = new Coordinate(middle - hexagonalSide/2, middle + magic * hexagonalSide);
+        Coordinate v3 = new Coordinate(middle + hexagonalSide/2, middle + magic * hexagonalSide);
+        Coordinate v4 = new Coordinate(middle + hexagonalSide, middle);
+        Coordinate v5 = new Coordinate(middle + hexagonalSide/2, middle - magic * hexagonalSide);
+        Coordinate v6 = new Coordinate(middle - hexagonalSide/2, middle - magic * hexagonalSide);
+
+
+        Polyline polyline = new Polyline();
+        polyline.getPoints().addAll(
+                    v1.getX(), v1.getY(),
+                    v2.getX(), v2.getY(),
+                    v3.getX(), v3.getY(),
+                    v4.getX(), v4.getY(),
+                    v5.getX(), v5.getY(),
+                    v6.getX(), v6.getY(),
+                    v1.getX(), v1.getY()
+                );
+        root.getChildren().add(polyline);
+
+        Text text = new Text(getKey());
+        root.getChildren().add(text);
 
         root.setBackground(Background.EMPTY);
         //root.setStyle("-fx-background-color: transparent; -fx-border-color: ddd; -fx-border-width: 1px 1px 1px 1px");
@@ -56,7 +68,7 @@ public class Block {
 
     private final Coordinate coordinate;
     private final AnchorPane root;
-    int SIZE = HelloApplication.SIZE;
+    int SIZE = Application.SIZE;
 
 //    String border = "000";
 //    String content = "ccc";
@@ -66,10 +78,10 @@ public class Block {
     int contacts = 0;
 
     public String getKey() {
-        return String.format("%s_%s", coordinate.getX(), coordinate.getY());
+        return String.format("%s_%s", (int)coordinate.getX() , (int)coordinate.getY());
     }
 
-    public Block(Coordinate coordinate) {
+    public Hex(Coordinate coordinate) {
 
 
 //        Rectangle rect = new Rectangle(SIZE, SIZE, SIZE, SIZE);
@@ -105,25 +117,25 @@ public class Block {
     public void openPort(Port port) {
         ports.add(port);
     }
-    public void openPort(Block nextBlock) {
-        Coordinate next = nextBlock.getCoordinate();
+    public void openPort(Hex nextHex) {
+        Coordinate next = nextHex.getCoordinate();
         if (coordinate.getY() == next.getY()) {
             if (next.getX() > coordinate.getX()) {
                 ports.add(Port.RIGHT);
-                nextBlock.openPort(Port.LEFT);
+                nextHex.openPort(Port.LEFT);
             } else if (next.getX() < coordinate.getX()) {
                 ports.add(Port.LEFT);
-                nextBlock.openPort(Port.RIGHT);
+                nextHex.openPort(Port.RIGHT);
             }
         }
 
         if (coordinate.getX() == next.getX()) {
             if (next.getY() > coordinate.getY()) {
                 ports.add(Port.DOWN);
-                nextBlock.openPort(Port.UP);
+                nextHex.openPort(Port.UP);
             } else if (next.getY() < coordinate.getY()) {
                 ports.add(Port.UP);
-                nextBlock.openPort(Port.DOWN);
+                nextHex.openPort(Port.DOWN);
             }
         }
 

@@ -1,4 +1,4 @@
-package com.example.mazewalk;
+package com.example.mazewalk.old;
 
 import java.util.Random;
 

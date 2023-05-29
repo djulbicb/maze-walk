@@ -1,20 +1,20 @@
-package com.example.mazewalk.elements;
+package com.example.mazewalk.old.elements;
 
 
 public class Coordinate {
-    private final int Y;
-    private final int X;
+    private final double Y;
+    private final double X;
 
-    public Coordinate(int x, int y) {
+    public Coordinate(double x, double y) {
         X = x;
         Y = y;
     }
 
-    public int getY() {
+    public double getY() {
         return Y;
     }
 
-    public int getX() {
+    public double getX() {
         return X;
     }
 

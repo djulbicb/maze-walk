@@ -1,6 +1,6 @@
-package com.example.mazewalk.generators;
+package com.example.mazewalk.old.generators;
 
-import com.example.mazewalk.elements.Coordinate;
+import com.example.mazewalk.old.elements.Coordinate;
 
 import java.util.ArrayList;
 import java.util.List;

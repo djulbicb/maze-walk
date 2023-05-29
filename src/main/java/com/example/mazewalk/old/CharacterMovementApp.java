@@ -1,4 +1,4 @@
-package com.example.mazewalk;
+package com.example.mazewalk.old;
 
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
