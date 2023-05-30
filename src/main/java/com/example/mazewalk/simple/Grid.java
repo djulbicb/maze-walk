@@ -154,9 +154,12 @@ public class Grid {
         for (int i = 0; i < rows; i++) {
             out.append(side);
             for (int j = 0; j < columns; j++) {
-                if (grid[i][j].isLinkToEast()) {
+                Cell cell = grid[i][j];
+                if (cell.isLinkToEast()) {
+                    body = getBody(cell);
                     out.append(empty + body + empty);
                 } else {
+                    body = getBody(cell);
                     out.append(empty + body + side);
                 }
             }
@@ -166,6 +169,8 @@ public class Grid {
             if (i == rows - 1) {
                 continue;
             }
+
+            body = "   ";
 
             for (int j = 0; j < columns; j++) {
                 if (grid[i][j].isLinkToSouth()) {
@@ -183,6 +188,22 @@ public class Grid {
 
         return out.toString().trim();
     }
+
+    private String getBody(Cell cell) {
+        String label = cell.getLabel();
+        if (label.length() == 0) {
+            return "    ";
+        } else if (cell.getLabel().length() == 1) {
+            return String.format(" %s ", label);
+        } else if (cell.getLabel().length() == 2) {
+            return String.format("%s ", label);
+        } else if (label.length() == 3) {
+            return String.format("%s", label);
+        } else {
+            return label;
+        }
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
