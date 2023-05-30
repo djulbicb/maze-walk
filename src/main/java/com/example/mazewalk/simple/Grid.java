@@ -126,10 +126,10 @@ public class Grid {
 
     public String toAscii() {
         // Ascii elements
-        String body = "  ";
+        String body = "   ";
         String side = "|";
         String corner="+";
-        String top="---";
+        String top="----";
         String newLine = "\n";
         String empty = " ";
         // Create top and bottom border

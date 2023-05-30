@@ -198,6 +198,9 @@ public class Cell {
     private void setLabel(int currentDistance) {
         this.label = currentDistance + "";
     }
+    public String getLabel() {
+        return label;
+    }
 
     public void link(Cell rndNeighborCell) {
         this.linked.add(rndNeighborCell);
