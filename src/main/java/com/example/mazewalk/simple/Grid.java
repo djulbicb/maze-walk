@@ -1,25 +1,17 @@
 package com.example.mazewalk.simple;
 
 import com.example.mazewalk.Application;
-import javafx.scene.SnapshotParameters;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.WritableImage;
-import javafx.scene.image.WritablePixelFormat;
 import javafx.scene.layout.AnchorPane;
-
-import java.awt.geom.Path2D;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.IntBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
-import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class Grid {
     private int rows;
@@ -100,7 +92,6 @@ public class Grid {
 
                 int x = rowIdx * size;
                 int y = columnIdx * size;
-                System.out.println(x + " " + y);
 
                 if (!col.isLinkToNorth()) {
                     polyline.moveTo(x, y);
@@ -220,5 +211,13 @@ public class Grid {
             }
         }
         return cellList;
+    }
+
+    public Cell getRandomCell() {
+        Random random = new Random();
+        return grid[random.nextInt(rows)][random.nextInt(columns)];
+    }
+
+    public void draw(List<Cell> cells) {
     }
 }

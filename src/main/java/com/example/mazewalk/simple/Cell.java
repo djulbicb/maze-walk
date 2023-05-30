@@ -13,6 +13,7 @@ public class Cell {
 
     private int rowIdx;
     private int columnIdx;
+    private String label = " ";
 
     public Cell(int rowIdx, int columnIdx) {
         this.rowIdx = rowIdx;
@@ -123,9 +124,16 @@ public class Cell {
         rectangle.setFill(Paint.valueOf("ccc"));
         rectangle.setStroke(Paint.valueOf("ddd"));
         Text text = new Text(rowIdx + " " + columnIdx);
-        text.setLayoutY(10);
+        text.setLayoutY(20);
+        text.setLayoutX(10);
+
+        Text text1 = new Text(label);
+        text1.setLayoutY(40);
+        text1.setLayoutX(10);
+
         pane.getChildren().add(rectangle);
         pane.getChildren().add(text);
+        pane.getChildren().add(text1);
         pane.setLayoutY(size * rowIdx);
         pane.setLayoutX(size * columnIdx);
 
@@ -155,8 +163,48 @@ public class Cell {
         return pane;
     }
 
+    public Distance distances() {
+        Distance distance = new Distance(this);
+        List<Cell> frontier = new ArrayList<>();
+        frontier.add(this);
+        distance.getDistances().put(this, 0);
+
+        int currentDistance = 0;
+        setLabel(currentDistance);
+        currentDistance++;
+
+        boolean shouldContinue = true;
+        while (shouldContinue) {
+            List<Cell> newFrontier = new ArrayList<>();
+            for (Cell cell : frontier) {
+                for (Cell linkedCell : cell.linked) {
+                    if (!distance.getDistances().containsKey(linkedCell)) {
+                        newFrontier.add(linkedCell);
+                        distance.getDistances().put(linkedCell, currentDistance);
+                        linkedCell.setLabel(currentDistance);
+                    }
+                }
+            }
+            currentDistance++;
+            frontier = newFrontier;
+            if (frontier.isEmpty()) {
+                shouldContinue = false;
+            }
+        }
+
+       return distance;
+}
+
+    private void setLabel(int currentDistance) {
+        this.label = currentDistance + "";
+    }
+
     public void link(Cell rndNeighborCell) {
         this.linked.add(rndNeighborCell);
         rndNeighborCell.linked.add(this);
+    }
+
+    public List<Cell> linked() {
+        return linked;
     }
 }
