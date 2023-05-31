@@ -2,7 +2,7 @@ package com.example.mazewalk;
 
 
 import com.example.mazewalk.simple.Cell;
-import com.example.mazewalk.simple.DijkstraPathSolver;
+import com.example.mazewalk.simple.pathResolver.DijkstraPathSolver;
 import com.example.mazewalk.simple.Distance;
 import com.example.mazewalk.simple.Grid;
 import com.example.mazewalk.simple.resolver.SideWinder;
@@ -20,14 +20,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Application extends javafx.application.Application {
     public static int SIZE = 50;
     public static int HALF_SIZE = SIZE / 2;
-    public static int X = 5;
-    public static int Y = 5;
+    public static int X = 15;
+    public static int Y = 15;
 
     AnchorPane pane = new AnchorPane();
 
