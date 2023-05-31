@@ -15,6 +15,7 @@ public class DijkstraPathSolver {
         Cell current = end;
         boolean keepSearching = true;
         List<Cell> breadcrumbs = new ArrayList<>();
+        breadcrumbs.add(end);
 
         while (keepSearching) {
             List<Cell> linked = current.linked();

@@ -8,11 +8,17 @@ import com.example.mazewalk.simple.Grid;
 import com.example.mazewalk.simple.resolver.SideWinder;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
 import javafx.stage.Stage;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,8 +26,8 @@ import java.util.List;
 public class Application extends javafx.application.Application {
     public static int SIZE = 50;
     public static int HALF_SIZE = SIZE / 2;
-    static int X = 5;
-    static int Y = 5;
+    public static int X = 5;
+    public static int Y = 5;
 
     AnchorPane pane = new AnchorPane();
 
@@ -43,11 +49,11 @@ public class Application extends javafx.application.Application {
 
         grid.savePng();
 
-        Cell start = grid.getRandomCell();
+        Cell start = grid.getCell(0,0);// grid.getRandomCell();
         System.out.println("Picked: " + start);
         Distance distances = start.distances();
 
-        Cell end = grid.getRandomCell();
+        Cell end = grid.getCell(X - 1,Y - 1);// grid.getRandomCell();
 
         List<Cell> cells = solver.pathTo(distances, start, end);
 
@@ -59,9 +65,23 @@ public class Application extends javafx.application.Application {
         pane.getChildren().addAll(grid.render());
         draw(cells);
 
+        savePaneAsImage(pane, "test.png");
+
         stage.setTitle("Hello!");
         stage.setScene(scene);
         stage.show();
+    }
+
+    private static void savePaneAsImage(Pane pane, String filename) {
+        WritableImage image = pane.snapshot(new SnapshotParameters(), null);
+
+        File file = new File(filename);
+        try {
+            ImageIO.write(convertToBufferedImage(image), "png", file);
+            System.out.println("Image saved as " + filename);
+        } catch (IOException e) {
+            System.out.println("Failed to save image: " + e.getMessage());
+        }
     }
 
     private void draw(List<Cell> cells) {
@@ -81,6 +101,21 @@ public class Application extends javafx.application.Application {
         pane.getChildren().add(polyline);
     }
 
+    private static BufferedImage convertToBufferedImage(WritableImage writableImage) {
+        int width = (int) writableImage.getWidth();
+        int height = (int) writableImage.getHeight();
+
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+        // Get the pixel data from the WritableImage
+        int[] buffer = new int[width * height];
+        writableImage.getPixelReader().getPixels(0, 0, width, height, javafx.scene.image.PixelFormat.getIntArgbInstance(), buffer, 0, width);
+
+        // Set the pixel data to the BufferedImage
+        bufferedImage.setRGB(0, 0, width, height, buffer, 0, width);
+
+        return bufferedImage;
+    }
 
     public static void main(String[] args) {
         launch();

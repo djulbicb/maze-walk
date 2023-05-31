@@ -190,17 +190,18 @@ public class Grid {
     }
 
     private String getBody(Cell cell) {
-        String label = cell.getLabel();
-        if (label.length() == 0) {
+        int label = cell.getLabel();
+        String labelStr = String.valueOf(cell.getLabel());
+        if (labelStr.length() == 0) {
             return "    ";
-        } else if (cell.getLabel().length() == 1) {
+        } else if (labelStr.length() == 1) {
             return String.format(" %s ", label);
-        } else if (cell.getLabel().length() == 2) {
+        } else if (labelStr.length() == 2) {
             return String.format("%s ", label);
-        } else if (label.length() == 3) {
+        } else if (labelStr.length() == 3) {
             return String.format("%s", label);
         } else {
-            return label;
+            return labelStr;
         }
     }
 
@@ -240,5 +241,9 @@ public class Grid {
     }
 
     public void draw(List<Cell> cells) {
+    }
+
+    public Cell getCell(int X, int Y) {
+        return grid[X][Y];
     }
 }

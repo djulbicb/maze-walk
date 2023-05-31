@@ -2,6 +2,7 @@ package com.example.mazewalk.simple;
 
 import com.example.mazewalk.Application;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
@@ -13,7 +14,7 @@ public class Cell {
 
     private int rowIdx;
     private int columnIdx;
-    private String label = " ";
+    private int label = -1;
 
     public Cell(int rowIdx, int columnIdx) {
         this.rowIdx = rowIdx;
@@ -121,13 +122,18 @@ public class Cell {
 
         AnchorPane pane = new AnchorPane();
         Rectangle rectangle = new Rectangle(size, size);
+
+        Color orange = Color.color(1, 0.6, 0.1, getOpacity(label));
         rectangle.setFill(Paint.valueOf("ccc"));
+        rectangle.setFill(orange);
         rectangle.setStroke(Paint.valueOf("ddd"));
+
+
         Text text = new Text(rowIdx + " " + columnIdx);
         text.setLayoutY(20);
         text.setLayoutX(10);
 
-        Text text1 = new Text(label);
+        Text text1 = new Text(label + "");
         text1.setLayoutY(40);
         text1.setLayoutX(10);
 
@@ -163,6 +169,17 @@ public class Cell {
         return pane;
     }
 
+    private double getOpacity(int inputValue) {
+        double maxValue = Application.X * Application.Y;
+        double minValue = 0.7;
+        double remappedValue = (inputValue - minValue) / (maxValue - minValue);
+        if (remappedValue < 0) {
+            return 0;
+        }
+        return remappedValue;
+        // return 0.5d;
+    }
+
     public Distance distances() {
         Distance distance = new Distance(this);
         List<Cell> frontier = new ArrayList<>();
@@ -196,9 +213,9 @@ public class Cell {
 }
 
     private void setLabel(int currentDistance) {
-        this.label = currentDistance + "";
+        this.label = currentDistance;
     }
-    public String getLabel() {
+    public int getLabel() {
         return label;
     }
 
