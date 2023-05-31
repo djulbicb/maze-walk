@@ -13,4 +13,4 @@ Playing around with mazes, generate and solve.
 | 10    9 | 12   11 | 12 |
 +----+----+----+----+----+
 ```
-![mazeWithDistanceAndColor.png](mazeWithDistanceAndColor.png)
+![./mazeWithDistanceAndColor.png](mazeWithDistanceAndColor.png)
